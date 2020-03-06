@@ -106,6 +106,20 @@ register(
     max_episode_steps=500,
 )
 
+register(
+    id='CartPole-v2',
+    entry_point='gym.envs.classic_control:CartPoleEnv2',
+    max_episode_steps=500,
+    reward_threshold=475.0,
+)
+
+register(
+    id='AirPlane-v0',
+    entry_point='gym.envs.classic_control:AirplaneEnv',
+    max_episode_steps=500,
+    reward_threshold=475.0,
+)
+
 # Box2d
 # ----------------------------------------
 
