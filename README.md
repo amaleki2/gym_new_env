@@ -4,26 +4,24 @@
 
 This repo includes:
 1. OpenAI Gym environment with some additional environments including
-    1.1 inverted double pendulum: two-link pendulum with point masses m at the end of each link. Links are massless. Viscous friction with a coefficient c is assumed. Both links are actuated. This is a four dimensional dynamical system. [th1, th2, dth1, dth2]. Parameters include:
-        *  m: mass of point masses (default value = 0.5 kg)
-        *  L: length of each link (default value = 0.5 m)
-        *  c: viscous friction coefficient (default value = 0.1 N.s)
-        *  g: gravitational acceleration (default value = 9.8 m/s^2)
-        *  max_action: maximum torque on each link (default value = 1000 N.m)
-        *  x_0: initial position (default value = [0.]*4)
-        *  integration_method: integration scheme, options are "1st" which is a first order euler update and "2nd"
+    1. inverted double pendulum: two-link pendulum with point masses m at the end of each link. Links are massless. Viscous friction with a coefficient c is assumed. Both links are actuated. This is a four dimensional dynamical system. [th1, th2, dth1, dth2]. Parameters include:
+        -  `m`: mass of point masses (default value = 0.5 kg)
+        -  `L`: length of each link (default value = 0.5 m)
+        -  `c`: viscous friction coefficient (default value = 0.1 N.s)
+        -  `g`: gravitational acceleration (default value = 9.8 m/s^2)
+        -  `max_action`: maximum torque on each link (default value = 1000 N.m)
+        -  `x_0`: initial position (default value = `[0.]*4`)
+        -  `integration_method`: integration scheme, options are "1st" which is a first order euler update and "2nd"
                                  which is crank-nicolson update. 
-        *  dt: timestep (default value = 0.001 s)
-    1.2 inverted triple pendulum: three-link pendulum. parameters are similar to inverted double pendulum. 
-    1.3 airplane:
+        -  `dt`: timestep (default value = 0.001 s)
+    2. inverted triple pendulum: three-link pendulum. parameters are similar to inverted double pendulum. 
+    3. airplane: to be completed.
 2. Conroller Implementation using LQR (linear–quadratic regulator) and ILQR (iterative linear–quadratic regulator) methods
 3. Neural Network Controller: Training algorithm for designing neural network controller using behavior clonning.
 
 
-
-
 ## Installation
-1. required libraries: pickle, numpy, scipy, matplotlib
+1. required libraries: `pickle`, `numpy`, `scipy`, `matplotlib`
 2. From the top level directory, `gym_new_env`, run `pip install -e .`
 
 ## Usage
