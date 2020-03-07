@@ -1,158 +1,87 @@
-# PrefsForDriving
+# Project Title
 
-The code is tested with python3.6 and python3.7 and julia 1.3.1
-Here is the list of libraries with the version that is the code 
-is tested on. 
+One Paragraph of project description goes here
 
-we expect other versions of the above libraries (packages)
-are also compatible with our program. The only exeception is
-Flux.jl. You need to use 0.8.* version of this package, since
-the newer version has some issues with auto-differentiation.
+## Getting Started
 
-Also make sure you build PyCall package with that version
-For this, you can use:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+What things you need to install the software and how to install them
 
 ```
- using Pkg
- ENV["PYTHON"] = python_path # for example /usr/bin/python3.6
- Pkg.build(“PyCall”)
- Pkg.add(“PyCall”)
+Give examples
 ```
 
-Please see https://github.com/JuliaPy/PyCall.jl for  more details. 
+### Installing
 
-## necessary python libraries
-numpy==1.17.1  
-pyglet==1.4.10  
-Theano==1.0.4  
-matplotlib==3.1.3  
+A step by step series of examples that tell you how to get a development env running
 
+Say what the step will be
 
-## necessary julia packages
-Mamba==0.12.2  
-Optim==0.20.0  
-LinearAlgebra  
-ForwardDiff==0.10.9  
-LineSearches==7.0.1  
-Distributions==0.22.3  
-JLD2==0.1.11  
-DelimitedFiles  
-Flux==0.8.3  
-BSON==0.2.5  
-Plots==0.28.4  
-PyCall==1.91.2  
-
-
-## instructions
-
-### 1- python
-in two separate terminals run traj_A.py and traj_B.py. 
-Both files are located in python_model. This will allow us 
-to simulate two driving trajectories at the same time. 
 ```
-cd PrefsForDriving/python_model
-python3.6 traj_A.py
- ```
-
-(in a different terminal)
-```
-cd PrefsForDriving/python_model
-python3.6 traj_B.py	
+Give the example
 ```
 
-### 2- julia
-#### 2-1: generating train data
+And repeat
+
 ```
-cd PrefsForDriving
-julia
-include("driving_simulate.jl")
-reward_iteration(100)
+until finished
 ```
 
-#### 2-2: YOU MUST EXIT JULIA AND START OVER
+End with an example of getting some data out of the system or using it for a little demo
+
+## Running the tests
+
+Explain how to run the automated tests for this system
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
 ```
-exit()
-```
- 
-#### 2-3: generate test data.
-```
-include("driving_simulate.jl")
-@load "test_inputs_75.jld2"
-respond_to_test_set(u_test)
+Give an example
 ```
 
+### And coding style tests
 
-# gym_new_env
+Explain what these tests test and why
 
-## Intro
-
-This repo includes:
-1. OpenAI Gym environment with some additional environments including
-    1.1 inverted double pendulum: two-link pendulum with point masses m at the end of each link. Links are massless. Viscous friction with a coefficient c is assumed. Both links are actuated. This is a four dimensional dynamical system. [th1, th2, dth1, dth2]. Parameters include:
-        *  m: mass of point masses (default value = 0.5 kg)
-        *  L: length of each link (default value = 0.5 m)
-        *  c: viscous friction coefficient (default value = 0.1 N.s)
-        *  g: gravitational acceleration (default value = 9.8 m/s^2)
-        *  max_action: maximum torque on each link (default value = 1000 N.m)
-        *  x_0: initial position (default value = [0.]*4)
-        *  integration_method: integration scheme, options are "1st" which is a first order euler update and "2nd"
-                                 which is crank-nicolson update. 
-        *  dt: timestep (default value = 0.001 s)
-    1.2 inverted triple pendulum: three-link pendulum. parameters are similar to inverted double pendulum. 
-    1.3 airplane:
-2. Conroller Implementation using LQR (linear–quadratic regulator) and ILQR (iterative linear–quadratic regulator) methods
-3. Neural Network Controller: Training algorithm for designing neural network controller using behavior clonning.
-
-
-
-
-## Installation
-1. required libraries: pickle, numpy, scipy, matplotlib
-2. From the top level directory, `gym_new_env`, run `pip install -e .`
-
-## Usage
-1. double pendulum
 ```
-    env = make("Pendulum2-v0", dt=0.01)
-    env.reset()
-    for i in range(250):
-        env.step([0., 0.]) # no torque
-    env.render()
-```   
-2. controlling double pendulum using mixed ilqr and lqr:
-    ```
-    from gym.envs.registration import make
-    from controler.util import ControllerDoublePendulum
-    env = make("Pendulum2-v0", x_0=[1., 2., 0., -1.], dt=0.01) # initial position is [th1, th2, v1, v2]
-    env.reset()
-    control = ControllerDoublePendulum(env)
-    n_step_lqr, n_step_ilqr = 250, 150
-    Q = np.eye(4, 4)
-    Q[1, 1] = 0
-    Q[2, 2] = 0
-    Qf = np.eye(4, 4) * 1000
-    R = np.eye(2, 2)
-    x_goal = [0., 0., 0., 0.]
-    ilqr_actions = control.run_ilqr(Q, R, Qf, x_goal, n_step_ilqr)
-    lqr_actions = control.run_lqr(Q, R, x_goal, n_step_lqr, ilqr_actions[-1])
-    env.render() # or env.animate() to make a .gif file
-    ```
-3. controlling airplane using mixed ilqr and lqr with some intermediate way-points:
-    ```
-    import numpy as np
-    from gym.envs.registration import make
-    n_step_lqr, n_step_ilqr = 1500, 30
-    Q = np.eye(12, 12) *10
-    Qf = np.eye(12, 12) * 1000
-    R = np.eye(6, 6)
-    x_goal = [40., 0., 40., 0.,  0., 0., 0., .5, .5, 0., 0., 0.]
-    x_0    = [0.,  0., 0.,  2.,  0., 0., .5, 0., 0., 0., 0., 0.]
-    x_med  = [10., 0., 10., 0.,  0., 0., 0., 0., 0., 0., 0., 0.]
-    env = make("AirPlane-v0", dt=0.01, x_0=x_0, g=1.)
-    env.reset()
-    from util import ControllerAirPlane
-    control = ControllerAirPlane(env)
-    ilqr_actions = control.run_ilqr(Q, R, Qf, x_med, n_step_ilqr)
-    control.run_lqr(Q, R, x_goal, n_step_lqr, ilqr_actions[-1])
-    env.render(skip=5)
-    ```
+Give an example
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+
+## Authors
+
+* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Hat tip to anyone whose code was used
+* Inspiration
+* etc
