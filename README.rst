@@ -1,3 +1,87 @@
+# PrefsForDriving
+
+The code is tested with python3.6 and python3.7 and julia 1.3.1
+Here is the list of libraries with the version that is the code 
+is tested on. 
+
+we expect other versions of the above libraries (packages)
+are also compatible with our program. The only exeception is
+Flux.jl. You need to use 0.8.* version of this package, since
+the newer version has some issues with auto-differentiation.
+
+Also make sure you build PyCall package with that version
+For this, you can use:
+
+```
+ using Pkg
+ ENV["PYTHON"] = python_path # for example /usr/bin/python3.6
+ Pkg.build(“PyCall”)
+ Pkg.add(“PyCall”)
+```
+
+Please see https://github.com/JuliaPy/PyCall.jl for  more details. 
+
+## necessary python libraries
+numpy==1.17.1  
+pyglet==1.4.10  
+Theano==1.0.4  
+matplotlib==3.1.3  
+
+
+## necessary julia packages
+Mamba==0.12.2  
+Optim==0.20.0  
+LinearAlgebra  
+ForwardDiff==0.10.9  
+LineSearches==7.0.1  
+Distributions==0.22.3  
+JLD2==0.1.11  
+DelimitedFiles  
+Flux==0.8.3  
+BSON==0.2.5  
+Plots==0.28.4  
+PyCall==1.91.2  
+
+
+## instructions
+
+### 1- python
+in two separate terminals run traj_A.py and traj_B.py. 
+Both files are located in python_model. This will allow us 
+to simulate two driving trajectories at the same time. 
+```
+cd PrefsForDriving/python_model
+python3.6 traj_A.py
+ ```
+
+(in a different terminal)
+```
+cd PrefsForDriving/python_model
+python3.6 traj_B.py	
+```
+
+### 2- julia
+#### 2-1: generating train data
+```
+cd PrefsForDriving
+julia
+include("driving_simulate.jl")
+reward_iteration(100)
+```
+
+#### 2-2: YOU MUST EXIT JULIA AND START OVER
+```
+exit()
+```
+ 
+#### 2-3: generate test data.
+```
+include("driving_simulate.jl")
+@load "test_inputs_75.jld2"
+respond_to_test_set(u_test)
+```
+
+
 # gym_new_env
 
 ## Intro
